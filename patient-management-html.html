@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Patient Management System</title>
+    <!-- Main CSS -->
+    <style>
+        * {
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+        
+        body {
+            margin: 0;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        
+        h1 {
+            color: #2c3e50;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        .tabs {
+            display: flex;
+            margin-bottom: 20px;
+            border-bottom: 1px solid #ddd;
+        }
+        
+        .tab {
+            padding: 10px 20px;
+            cursor: pointer;
+            background-color: #f1f1f1;
+            border: 1px solid #ddd;
+            border-bottom: none;
+            border-radius: 5px 5px 0 0;
+            margin-right: 5px;
+        }
+        
+        .tab.active {
+            background-color: white;
+            border-bottom: 2px solid white;
+            font-weight: bold;
+        }
+        
+        .tab-content {
+            display: none;
+        }
+        
+        .tab-content.active {
+            display: block;
+        }
+        
+        .form-group {
+            margin-bottom: 15px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        
+        input, select {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        
+        .form-row {
+            display: flex;
+            flex-wrap: wrap;
+            margin: 0 -10px;
+        }
+        
+        .form-col {
+            flex: 1;
+            padding: 0 10px;
+            min-width: 200px;
+        }
+        
+        button {
+            background-color: #3498db;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            margin-top: 10px;
+        }
+        
+        button:hover {
+            background-color: #2980b9;
+        }
+        
+        .search-container {
+            margin-bottom: 20px;
+        }
+        
+        .search-container input {
+            width: 300px;
+            margin-right: 10px;
+        }
+        
+        .alert {
+            padding: 15px;
+            margin-bottom: 20px;
+            border-radius: 4px;
+            display: none;
+        }
+        
+        .alert-success {
+            background-color: #dff0d8;
+            color: #3c763d;
+            border: 1px solid #d6e9c6;
+        }
+        
+        .alert-danger {
+            background-color: #f2dede;
+            color: #a94442;
+            border: 1px solid #ebccd1;
+        }
+        
+        .alert-warning {
+            background-color: #fcf8e3;
+            color: #8a6d3b;
+            border: 1px solid #faebcc;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        
+        .table-container {
+            overflow-x: auto;
+            max-height: 500px;
+            margin-top: 20px;
+        }
+        
+        table, th, td {
+            border: 1px solid #ddd;
+        }
+        
+        th, td {
+            padding: 12px;
+            text-align: left;
+        }
+        
+        th {
+            background-color: #f2f2f2;
+            position: sticky;
+            top: 0;
+        }
+        
+        tr:hover {
+            background-color: #f5f5f5;
+        }
+        
+        .pagination {
+            display: flex;
+            justify-content: center;
+            margin-top: 20px;
+        }
+        
+        .pagination button {
+            margin: 0 5px;
+        }
+        
+        .action-buttons {
+            margin-top: 20px;
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+        
+        .action-buttons button {
+            margin-top: 0;
+        }
+        
+        #exportButton {
+            background-color: #27ae60;
+        }
+        
+        #exportButton:hover {
+            background-color: #219653;
+        }
+        
+        #importButton {
+            background-color: #e67e22;
+        }
+        
+        #importButton:hover {
+            background-color: #d35400;
+        }
+        
+        #viewAllButton {
+            background-color: #34495e;
+        }
+        
+        #viewAllButton:hover {
+            background-color: #2c3e50;
+        }
+        
+        #deleteButton {
+            background-color: #e74c3c;
+        }
+        
+        #deleteButton:hover {
+            background-color: #c0392b;
+        }
+        
+        .hidden {
+            display: none;
+        }
+        
+        @media (max-width: 768px) {
+            .form-col {
+                flex: 100%;
+            }
+            
+            .search-container input {
+                width: 100%;
+                margin-bottom: 10px;
+            }
+            
+            .action-buttons {
+                flex-direction: column;
+            }
+        }
+
+        /* Additional styles */
+        .google-sheets-status {
+            font-size: 14px;
+            padding: 5px 10px;
+            margin-top: 10px;
+            border-radius: 4px;
+            display: inline-block;
+        }
+        
+        .sheets-connected {
+            background-color: #d4edda;
+            color: #155724;
+        }
+        
+        .sheets-disconnected {
+            background-color: #f8d7da;
+            color: #721c24;
+        }
+        
+        .excel-hint {
+            background-color: #e8f4f8;
+            padding: 10px;
+            margin-bottom: 15px;
+            border-left: 4px solid #3498db;
+            font-size: 14px;
+        }
+    </style>
+    <!-- Link to additional CSS if needed -->
+    <link rel="stylesheet" href="additional-styles.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Patient Management System</h1>
+        
+        <div id="alertBox" class="alert"></div>
+        
+        <!-- Excel sync status indicator -->
+        <div class="excel-hint">
+            <p><strong>Excel/Google Sheets Sync:</strong> 
+                <span id="syncStatus" class="google-sheets-status sheets-disconnected">Not Connected</span>
+                <button id="setupSyncButton">Setup Sync</button>
+            </p>
+            <p id="syncInstructions">Connect to Google Sheets to automatically sync your patient data with an online spreadsheet.</p>
+        </div>
+        
+        <div class="tabs">
+            <div class="tab active" data-tab="add-patient">Add New Patient</div>
+            <div class="tab" data-tab="search-patient">Search Patient</div>
+            <div class="tab" data-tab="all-patients">All Patients</div>
+        </div>
+        
+        <div id="add-patient" class="tab-content active">
+            <h2>Add New Patient</h2>
+            <form id="addPatientForm">
+                <div class="form-row">
+                    <div class="form-col">
+                        <div class="form-group">
+                            <label for="patientNumber">Patient File Number*</label>
+                            <input type="text" id="patientNumber" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="hospitalName">Hospital Name</label>
+                            <input type="text" id="hospitalName">
+                        </div>
+                        <div class="form-group">
+                            <label for="date">Date*</label>
+                            <input type="date" id="date" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="death">Death</label>
+                            <select id="death">
+                                <option value="">Select</option>
+                                <option value="Y">Yes</option>
+                                <option value="N">No</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-col">
+                        <div class="form-group">
+                            <label for="gender">Gender*</label>
+                            <select id="gender" required>
+                                <option value="">Select</option>
+                                <option value="M">Male</option>
+                                <option value="F">Female</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="height">Height (CM)*</label>
+                            <input type="number" id="height" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="weight">Weight (KG)*</label>
+                            <input type="number" id="weight" required step="0.1">
+                        </div>
+                        <div class="form-group">
+                            <label for="bmi">BMI</label>
+                            <input type="number" id="bmi" readonly step="0.1">
+                        </div>
+                    </div>
+                    <div class="form-col">
+                        <div class="form-group">
+                            <label for="bsa">BSA</label>
+                            <input type="number" id="bsa" readonly step="0.01">
+                        </div>
+                        <div class="form-group">
+                            <label for="htn">HTN</label>
+                            <select id="htn">
+                                <option value="">Select</option>
+                                <option value="Y">Yes</option>
+                                <option value="N">No</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="copd">COPD</label>
+                            <select id="copd">
+                                <option value="">Select</option>
+                                <option value="Y">Yes</option>
+                                <option value="N">No</option>
+                                <option value="G">G</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="ef">EF</label>
+                            
